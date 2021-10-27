@@ -275,5 +275,5 @@ async def on_ready():
   loop.close()
 
 keep_alive()
-bot.run('ODg4NDQ3NTU5MjU1ODU1MTg1.YUS1RA.jT6wQ-6HkueVdEQtz0c4MZDb2ws')
-client.run('ODg4NDQ3NTU5MjU1ODU1MTg1.YUS1RA.jT6wQ-6HkueVdEQtz0c4MZDb2ws')
+bot.run('bot token')
+client.run('bot token')
