@@ -9,6 +9,7 @@ client = discord.Client()
 bot = commands.Bot(".")
 
 spam = False
+syntaxFail = ['https://tmp.projectlounge.pw/3tbl24cj9yn.gif', 'https://cdn.discordapp.com/attachments/794363033472335922/905134307067191346/caption.gif',"https://cdn.discordapp.com/attachments/794363033472335922/901639442735984680/caption.gif",'https://cdn.discordapp.com/attachments/794363033472335922/905136360497758239/meme.gif']
 
 @bot.command()
 async def spam(ctx, *text):
@@ -19,7 +20,7 @@ async def spam(ctx, *text):
         await ctx.channel.send(" ".join(text)) 
         await asyncio.sleep(0.8)
     except:
-      await ctx.channel.send("https://cdn.discordapp.com/attachments/794363033472335922/901639442735984680/caption.gif")
+      await ctx.channel.send(random.choice(syntaxFail))
 
 @bot.command()
 async def spamnum(ctx, *text):
@@ -32,7 +33,7 @@ async def spamnum(ctx, *text):
         if not spam:
           return
   except:
-    await ctx.channel.send("https://cdn.discordapp.com/attachments/794363033472335922/901639442735984680/caption.gif")
+      await ctx.channel.send(random.choice(syntaxFail))
 
 @bot.command()
 async def schedule(ctx, *text):
@@ -47,7 +48,7 @@ async def schedule(ctx, *text):
     msg = msg.strip()
     n = int(n.strip())
   except:
-    await channel.send("https://cdn.discordapp.com/attachments/794363033472335922/901639442735984680/caption.gif")
+      await ctx.channel.send(random.choice(syntaxFail))
 
   if n > 100:
     await channel.send("That's too many spams <:bruh:795689951248646194>. Number of spams set to 100.")
@@ -78,7 +79,7 @@ async def schedule(ctx, *text):
   elif half == 'am' and hr == 12:
     hr = 0
   
-  sendDate = datetime(yr, mn, dy, hr, mnt) + timedelta(hours=4)
+  sendDate = datetime(yr, mn, dy, hr, mnt) + timedelta(hours=5)
   try:
     tl = sendDate - datetime.now()
   except:
@@ -91,28 +92,30 @@ async def schedule(ctx, *text):
   await channel.send(f"\"{msg}\" will be sent on {d} at {t}, {n} times <:tf:846144213942140968>. Spam ID: {id}")
 
   print(msg, sendDate, n, ctx, backupText)
-  spamDic = {"msg": msg, 
-            "date": [yr, mn, dy], 
-            "time": [hr, mnt],
-            "n": n, 
-            "channel": channelID,
-            "repeat": 'no'}
+  spamDic = {0: msg, 
+            1: [yr, mn, dy], 
+            2: [hr, mnt],
+            3: n, 
+            4: channelID,
+            5: 'no'}
   print(spamDic)
   db[id] = spamDic
   await scheduled_spam(id)
 
 async def scheduled_spam(id):
-  msg = db[id]['msg']
-  yr = db[id]['date'][0]
-  mn = db[id]['date'][1]
-  dy = db[id]['date'][2]
-  hr = db[id]['time'][0]
-  mnt = db[id]['time'][1]
-  n = db[id]['n']
-  channelID = db[id]['channel']
+  msg = db[id]['0']
+  yr = db[id]['1'][0]
+  mn = db[id]['1'][1]
+  dy = db[id]['1'][2]
+  hr = db[id]['2'][0]
+  mnt = db[id]['2'][1]
+  n = db[id]['3']
+  channelID = db[id]['4']
   channel = bot.get_channel(channelID)
+  r = False
 
-  sendDate = datetime(yr, mn, dy, hr, mnt) + timedelta(hours=4)
+  if not r:
+    sendDate = datetime(yr, mn, dy, hr, mnt) + timedelta(hours=5)
 
   global spam
   spam = True
@@ -131,22 +134,33 @@ async def scheduled_spam(id):
       await asyncio.sleep(0.8)
       if not spam:
         break 
-    if db[id]['repeat'] == 'no':
+    if db[id]['5'] == 'no':
       del db[id]
       repeat = False
     else:
-      if db[id]['repeat'] == 'hourly':
+      if db[id]['5'] == 'hourly':
         sendDate += timedelta(hours = 1)
-      elif db[id]['repeat'] == 'daily':
+      elif db[id]['5'] == 'daily':
         sendDate += timedelta(days = 1)
-      elif db[id]['repeat'] == 'weekly':
+      elif db[id]['5'] == 'weekly':
         sendDate += timedelta(weeks = 1)
-      elif db[id]['repeat'] == 'monthly':
+      elif db[id]['5'] == 'monthly':
         sendDate += timedelta(months = 1)
-      elif db[id]['repeat'] == 'yearly':
+      elif db[id]['5'] == 'yearly':
         sendDate += timedelta(years = 1)
-      elif db[id]['repeat'] == 'minutely':
+      elif db[id]['5'] == 'minutely':
         sendDate += timedelta(minutes = 1)
+      r = True
+      db[id]['2'][0] = sendDate.hour
+      db[id]['2'][1] = sendDate.minute
+      db[id]['1'][0] = sendDate.year
+      db[id]['1'][1] = sendDate.month
+      db[id]['1'][2] = sendDate.day
+      yr = db[id]['1'][0]
+      mn = db[id]['1'][1]
+      dy = db[id]['1'][2]
+      hr = db[id]['2'][0]
+      mnt = db[id]['2'][1]
 
 def generateID():
   id = ""
@@ -162,11 +176,14 @@ async def unspam(ctx):
 
 @bot.command()
 async def cancel(ctx, id):
-  if id not in db.keys():
-    await ctx.channel.send("That ID doesn't exist <:smh:824315424413581343>")
-    return
-  await ctx.channel.send(f"Spam {id} has been cancelled <:trolldespair:886656856662093884>")
-  del db[id]
+  try:
+    if id not in db.keys():
+      await ctx.channel.send("That ID doesn't exist <:smh:824315424413581343>")
+      return
+    await ctx.channel.send(f"Spam {id} has been cancelled <:trolldespair:886656856662093884>")
+    del db[id]
+  except:
+      await ctx.channel.send(random.choice(syntaxFail))
 
 @bot.command()
 async def scheduled(ctx):
@@ -175,7 +192,7 @@ async def scheduled(ctx):
     await ctx.channel.send("No scheduled spams <:oooooooooooh:850381684939161631>")
     return
   for key in db.keys():
-    embedVar.add_field(name=f'ID: {key}', value=f'Text: {db[key]["msg"]}', inline=False)
+    embedVar.add_field(name=f'ID: {key}', value=f'Text: {db[key][str(0)]}', inline=False)
   await ctx.channel.send(embed=embedVar)
 
 @bot.command()
@@ -184,25 +201,35 @@ async def info(ctx, id):
   if id not in db.keys():
     await ctx.channel.send("That ID doesn't exist <:smh:824315424413581343>")
     return
+  m = str(db[id]['2'][1])
+  if db[id]['2'][1] < 10:
+    m = '0' + m
   embedVar = discord.Embed(title=f"Info for spam ID {id}", color=0x00ee00)
-  embedVar.add_field(name="Message", value=db[id]['msg'], inline=False)
-  embedVar.add_field(name="Scheduled date", value=f"{db[id]['date'][0]}/{db[id]['date'][1]}/{db[id]['date'][2]}", inline=False)
-  embedVar.add_field(name="Scheduled time", value=f"{db[id]['time'][0] % 12}:{db[id]['time'][1]}{a[db[id]['time'][1]//12]}", inline=False)
-  embedVar.add_field(name="Number of spams", value=str(db[id]['n']), inline=False)
+  embedVar.add_field(name="Message", value=db[id]['0'], inline=False)
+  embedVar.add_field(name="Scheduled date", value=f"{db[id]['1'][0]}/{db[id]['1'][1]}/{db[id]['1'][2]}", inline=False)
+  embedVar.add_field(name="Scheduled time", value=f"{db[id]['2'][0] % 12}:{m}{a[db[id]['2'][0]//12]}", inline=False)
+  embedVar.add_field(name="Number of spams", value=str(db[id]['3']), inline=False)
+  embedVar.add_field(name="Repeat", value=str(db[id]['5']), inline=False)
   await ctx.channel.send(embed=embedVar)
 
 @bot.command()
-async def repeat(ctx, id, period):
+async def repeat(ctx, *idperiod):
+  try:
+    id = idperiod[0]
+    period = idperiod[1]
+  except:
+      await ctx.channel.send(random.choice(syntaxFail))
   period = period.casefold()
   if id not in db.keys():
     await ctx.channel.send("That ID doesn't exist <:smh:824315424413581343>")
     return
-  if period in ['minutely','hourly', 'daily', 'weekly', 'monthly', 'yearly']:
-    db[id] = period
+  if period in ['minutely','hourly', 'daily', 'weekly', 'monthly','yearly']:
+    db[id]['5'] = period
   else:
-    await ctx.channel.send("Please enter a proper repeat period <:gun~1:796406797308264519> ")
+    await ctx.channel.send("Please enter a proper repeat period <:gun:796406797308264519> ")
     return
   await ctx.channel.send(f"Spam ID {id} will repeat {period} <:catCup:897669241896075354>")
+  
 
 @bot.command()
 async def commands(ctx):
@@ -270,10 +297,13 @@ async def on_ready():
   for key in db.keys():
     tasks.append(asyncio.ensure_future(scheduled_spam(key)))
 
+
   loop = asyncio.get_event_loop()
   loop.run_until_complete(asyncio.gather(*tasks))
   loop.close()
 
+
+
 keep_alive()
-bot.run('bot token')
-client.run('bot token')
+bot.run('token')
+client.run('token')
