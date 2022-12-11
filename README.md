@@ -1,7 +1,5 @@
-# SpamBot
-A discord bot for spamming messages.
-
-Great way to annoy your friends, or even set reminders.
+# ScheduleBot
+A discord bot for scheduling messages, trolling friends, and more.
 
 Features:
 
@@ -9,4 +7,8 @@ Can spam any message at a rate of 1 message a second. Also works with link embed
 
 Schedule a message spam at any future date and time.
 
-Set spams to repeat every day, week, month or year.
+Set messages to repeat every day, week, month or year.
+
+Speak in voice channels with Google TTS.
+
+Start ratio battles against your friends by replying "ratio" to one of their messages.
