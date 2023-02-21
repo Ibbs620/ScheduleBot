@@ -387,7 +387,7 @@ async def commands(ctx):
 	                   value="Sends a TTS message in voice channels",
 	                   inline=False)
 	embedVar.add_field(name='.stfu',
-	                   value="Makes the bot shut the fuck up",
+	                   value="Makes the bot shut up",
 	                   inline=False)
 	embedVar.add_field(name='.syntax',
 	                   value="Displays the syntax of a command",
@@ -422,7 +422,7 @@ async def syntax(ctx, command):
 		                   value=".spamnum <number> <message>",
 		                   inline=False)
 		embedVar.add_field(name="Example",
-		                   value=".spamnum 20 cock",
+		                   value=".spamnum 20 hi",
 		                   inline=False)
 	elif command == 'schedule':
 		embedVar = discord.Embed(title=".schedule", color=0x00ee00)
@@ -485,7 +485,7 @@ async def syntax(ctx, command):
 		embedVar = discord.Embed(title=".say", color=0x00ee00)
 		embedVar.add_field(name="Syntax", value=".say <message>", inline=False)
 		embedVar.add_field(name="Example",
-		                   value=".say deez nuts",
+		                   value=".say hello",
 		                   inline=False)
 	elif command == 'syntax' or command == 'commands':
 		await ctx.channel.send("<:ibbswhat:798384138453254175>")
@@ -495,7 +495,7 @@ async def syntax(ctx, command):
 		                   value=".speak <message>",
 		                   inline=False)
 		embedVar.add_field(name="Example",
-		                   value=".speak I like dick",
+		                   value=".speak spambot jumpscare",
 		                   inline=False)
 	elif command == 'ratio':
 		embedVar = discord.Embed(title=".ratio", color=0x00ee00)
@@ -562,7 +562,7 @@ async def join(ctx):
 		channel = ctx.author.voice.channel
 		vc = await channel.connect()
 	else:
-		await ctx.channel.send("Join a channel first bozo")
+		await ctx.channel.send("Join a channel first")
 
 
 @bot.command()
@@ -670,7 +670,7 @@ async def react(ctx, emoji):
 			    "Who am I supposed to react to :face_with_raised_eyebrow:")
 	except:
 		await ctx.message.reply(
-		    "That's not an emote idiot <:lmao:846149830999932938>")
+		    "That's not an emote <:lmao:846149830999932938>")
 
 
 @bot.command()
